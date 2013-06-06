@@ -2,6 +2,7 @@ package net.aufdemrand.denizen.scripts.commands.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import net.aufdemrand.denizen.exceptions.CommandExecutionException;
 import net.aufdemrand.denizen.exceptions.InvalidArgumentsException;
@@ -48,12 +49,21 @@ public class FireworkCommand extends AbstractCommand {
 
             } else if (aH.matchesValueArg("type", arg, ArgumentType.String)) {
             	
-            	for (FireworkEffect.Type typeValue : FireworkEffect.Type.values()) {
+            	String typeArg = arg.split(":", 2)[1].toUpperCase();
+            	
+            	if (typeArg.matches("RANDOM")) {
             		
-            		if (arg.split(":", 2)[1].toUpperCase().matches(typeValue.name())) {
+            		type = FireworkEffect.Type.values()[new Random().nextInt(FireworkEffect.Type.values().length)];
+            	}
+            	else {
+            	
+            		for (FireworkEffect.Type typeValue : FireworkEffect.Type.values()) {
+            		
+            			if (typeArg.matches(typeValue.name())) {
             			
-            			type = typeValue;
-            			break;
+            				type = typeValue;
+            				break;
+            			}
             		}
             	}
             	
@@ -107,6 +117,7 @@ public class FireworkCommand extends AbstractCommand {
         scriptEntry.addObject("trail", trail);
     }
     
+    @SuppressWarnings("unchecked")
 	@Override
     public void execute(final ScriptEntry scriptEntry) throws CommandExecutionException {
         // Get objects
